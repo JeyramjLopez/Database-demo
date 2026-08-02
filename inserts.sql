@@ -1,0 +1,6 @@
+-- INSERT INTO categorias
+-- INSERT INTO proveedores
+-- INSERT INTO productos
+-- INSERT INTO clientes
+-- INSERT INTO ventas
+-- INSERT INTO detalle_ventas
