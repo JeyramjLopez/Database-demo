@@ -1,0 +1,104 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+.encabezado {
+  padding: 32px;
+  background: #111827;
+  border-bottom: 1px solid #334155;
+}
+
+.encabezado h1 {
+  margin: 0 0 8px;
+}
+
+.encabezado p {
+  margin: 0;
+  color: #94a3b8;
+}
+
+.contenedor {
+  width: min(1200px, 92%);
+  margin: 40px auto;
+}
+
+.panel {
+  padding: 24px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 14px;
+}
+
+.titulo-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.titulo-panel h2 {
+  margin: 0 0 6px;
+}
+
+.titulo-panel p {
+  margin: 0;
+  color: #94a3b8;
+}
+
+#buscar {
+  width: 280px;
+  max-width: 100%;
+  padding: 12px;
+  color: #e2e8f0;
+  background: #0f172a;
+  border: 1px solid #475569;
+  border-radius: 8px;
+}
+
+.mensaje {
+  margin-bottom: 16px;
+  color: #94a3b8;
+}
+
+.tabla-contenedor {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 14px;
+  text-align: left;
+  border-bottom: 1px solid #334155;
+}
+
+th {
+  color: #94a3b8;
+}
+
+tbody tr:hover {
+  background: #273449;
+}
+
+@media (max-width: 700px) {
+  .titulo-panel {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  #buscar {
+    width: 100%;
+  }
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>TechZone Inventory</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+  <header class="encabezado">
+    <div>
+      <h1>TechZone Inventory</h1>
+      <p>Tienda de electrónica, componentes y hardware</p>
+    </div>
+  </header>
+
+  <main class="contenedor">
+    <section class="panel">
+      <div class="titulo-panel">
+        <div>
+          <h2>Inventario</h2>
+          <p>Productos disponibles en la tienda</p>
+        </div>
+
+        <input
+          type="search"
+          id="buscar"
+          placeholder="Buscar producto"
+        >
+      </div>
+
+      <div id="mensaje" class="mensaje">
+        Cargando productos...
+      </div>
+
+      <div class="tabla-contenedor">
+        <table>
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Descripción</th>
+              <th>Precio</th>
+              <th>Stock</th>
+            </tr>
+          </thead>
+
+          <tbody id="lista-productos"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
