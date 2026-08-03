@@ -5,23 +5,78 @@ const clienteSupabase = supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
-
-const cuerpoTabla = document.querySelector("#lista-productos");
+const listaProductos = document.querySelector("#lista-productos");
 const mensaje = document.querySelector("#mensaje");
 const buscador = document.querySelector("#buscar");
+const filtroCategoria = document.querySelector("#filtro-categoria");
+
+const totalProductosElemento =
+  document.querySelector("#total-productos");
+
+const totalUnidadesElemento =
+  document.querySelector("#total-unidades");
+
+const valorInventarioElemento =
+  document.querySelector("#valor-inventario");
+
+const stockBajoElemento =
+  document.querySelector("#stock-bajo");
 
 let productos = [];
 
+const categorias = {
+  1: {
+    nombre: "Procesadores",
+    icono: "🧠"
+  },
+  2: {
+    nombre: "Tarjetas gráficas",
+    icono: "🎮"
+  },
+  3: {
+    nombre: "Memoria RAM",
+    icono: "💾"
+  },
+  4: {
+    nombre: "Almacenamiento",
+    icono: "📀"
+  },
+  5: {
+    nombre: "Motherboards",
+    icono: "🔌"
+  },
+  6: {
+    nombre: "Fuentes de poder",
+    icono: "⚡"
+  },
+  7: {
+    nombre: "Periféricos",
+    icono: "🖱️"
+  },
+  8: {
+    nombre: "Accesorios",
+    icono: "🔧"
+  }
+};
+
 async function cargarProductos() {
-  mensaje.textContent = "Cargando productos...";
+  mensaje.textContent = "Cargando productos desde Supabase...";
 
   const { data, error } = await clienteSupabase
     .from("productos")
-    .select("id, nombre, descripcion, precio_venta, stock")
+    .select(`
+      id,
+      nombre,
+      descripcion,
+      precio_venta,
+      stock,
+      categoria_id
+    `)
     .order("nombre");
 
   if (error) {
-    console.error(error);
+    console.error("Error de Supabase:", error);
+
     mensaje.textContent =
       "No fue posible cargar los productos.";
 
@@ -30,50 +85,172 @@ async function cargarProductos() {
 
   productos = data ?? [];
 
-  mostrarProductos(productos);
+  actualizarEstadisticas();
+  aplicarFiltros();
+}
 
-  mensaje.textContent =
-    `${productos.length} productos encontrados`;
+function actualizarEstadisticas() {
+  const totalProductos = productos.length;
+
+  const totalUnidades = productos.reduce(
+    (acumulado, producto) =>
+      acumulado + Number(producto.stock),
+    0
+  );
+
+  const valorInventario = productos.reduce(
+    (acumulado, producto) =>
+      acumulado +
+      Number(producto.precio_venta) *
+      Number(producto.stock),
+    0
+  );
+
+  const productosStockBajo = productos.filter(
+    (producto) => Number(producto.stock) < 10
+  ).length;
+
+  totalProductosElemento.textContent = totalProductos;
+
+  totalUnidadesElemento.textContent =
+    totalUnidades.toLocaleString("en-US");
+
+  valorInventarioElemento.textContent =
+    valorInventario.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD"
+    });
+
+  stockBajoElemento.textContent = productosStockBajo;
+}
+
+function obtenerEstadoStock(stock) {
+  const cantidad = Number(stock);
+
+  if (cantidad < 10) {
+    return {
+      texto: `${cantidad} disponibles`,
+      clase: "stock-bajo"
+    };
+  }
+
+  if (cantidad < 20) {
+    return {
+      texto: `${cantidad} disponibles`,
+      clase: "stock-medio"
+    };
+  }
+
+  return {
+    texto: `${cantidad} disponibles`,
+    clase: "stock-alto"
+  };
 }
 
 function mostrarProductos(lista) {
-  cuerpoTabla.innerHTML = "";
+  listaProductos.innerHTML = "";
 
   if (lista.length === 0) {
-    cuerpoTabla.innerHTML = `
-      <tr>
-        <td colspan="4">No se encontraron productos.</td>
-      </tr>
+    listaProductos.innerHTML = `
+      <div class="sin-resultados">
+        No encontramos productos con esos filtros.
+      </div>
     `;
+
+    mensaje.textContent = "0 productos encontrados";
 
     return;
   }
 
   for (const producto of lista) {
-    const fila = document.createElement("tr");
+    const categoria =
+      categorias[producto.categoria_id] ?? {
+        nombre: "Tecnología",
+        icono: "💻"
+      };
 
-    fila.innerHTML = `
-      <td>${producto.nombre}</td>
-      <td>${producto.descripcion ?? ""}</td>
-      <td>$${Number(producto.precio_venta).toFixed(2)}</td>
-      <td>${producto.stock}</td>
+    const estadoStock = obtenerEstadoStock(producto.stock);
+
+    const tarjeta = document.createElement("article");
+
+    tarjeta.className = "producto";
+
+    tarjeta.innerHTML = `
+      <div class="producto-imagen">
+        ${categoria.icono}
+      </div>
+
+      <div class="producto-contenido">
+        <span class="producto-categoria">
+          ${categoria.nombre}
+        </span>
+
+        <h3>${producto.nombre}</h3>
+
+        <p class="producto-descripcion">
+          ${producto.descripcion ?? "Sin descripción disponible."}
+        </p>
+
+        <div class="producto-footer">
+          <strong class="producto-precio">
+            ${Number(producto.precio_venta).toLocaleString(
+              "en-US",
+              {
+                style: "currency",
+                currency: "USD"
+              }
+            )}
+          </strong>
+
+          <span class="producto-stock ${estadoStock.clase}">
+            ${estadoStock.texto}
+          </span>
+        </div>
+      </div>
     `;
 
-    cuerpoTabla.appendChild(fila);
+    listaProductos.appendChild(tarjeta);
   }
-}
-
-buscador.addEventListener("input", () => {
-  const texto = buscador.value.toLowerCase().trim();
-
-  const filtrados = productos.filter((producto) =>
-    producto.nombre.toLowerCase().includes(texto)
-  );
-
-  mostrarProductos(filtrados);
 
   mensaje.textContent =
-    `${filtrados.length} productos encontrados`;
-});
+    `${lista.length} productos encontrados`;
+}
+
+function aplicarFiltros() {
+  const texto = buscador.value
+    .toLowerCase()
+    .trim();
+
+  const categoriaSeleccionada =
+    filtroCategoria.value;
+
+  const productosFiltrados = productos.filter(
+    (producto) => {
+      const coincideTexto =
+        producto.nombre
+          .toLowerCase()
+          .includes(texto) ||
+        (producto.descripcion ?? "")
+          .toLowerCase()
+          .includes(texto);
+
+      const coincideCategoria =
+        categoriaSeleccionada === "todas" ||
+        String(producto.categoria_id) ===
+          categoriaSeleccionada;
+
+      return coincideTexto && coincideCategoria;
+    }
+  );
+
+  mostrarProductos(productosFiltrados);
+}
+
+buscador.addEventListener("input", aplicarFiltros);
+
+filtroCategoria.addEventListener(
+  "change",
+  aplicarFiltros
+);
 
 cargarProductos();

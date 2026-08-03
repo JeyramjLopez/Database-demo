@@ -2,58 +2,166 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Tienda de componentes, hardware y accesorios de computadora"
+  >
 
   <title>TechZone Inventory</title>
 
   <link rel="stylesheet" href="style.css">
 
+  <!-- Biblioteca oficial de Supabase para JavaScript -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
   <header class="encabezado">
-    <div>
-      <h1>TechZone Inventory</h1>
-      <p>Tienda de electrónica, componentes y hardware</p>
-    </div>
+    <nav class="navegacion contenedor">
+      <a href="#" class="logo">
+        <span class="logo-icono">TZ</span>
+
+        <span>
+          <strong>TechZone</strong>
+          <small>Inventory</small>
+        </span>
+      </a>
+
+      <div class="enlaces">
+        <a href="#productos">Productos</a>
+        <a href="#estadisticas">Inventario</a>
+        <a href="#contacto">Contacto</a>
+      </div>
+    </nav>
+
+    <section class="hero contenedor">
+      <div class="hero-contenido">
+        <span class="etiqueta-principal">
+          Tecnología y hardware
+        </span>
+
+        <h1>
+          Componentes para construir tu próxima computadora
+        </h1>
+
+        <p>
+          Explora procesadores, tarjetas gráficas, memoria RAM,
+          almacenamiento, periféricos y accesorios disponibles
+          en nuestro inventario.
+        </p>
+
+        <a href="#productos" class="boton-principal">
+          Ver productos
+        </a>
+      </div>
+
+      <div class="hero-tarjeta">
+        <span class="hero-icono">⚙️</span>
+        <h2>Inventario en tiempo real</h2>
+        <p>
+          Los precios y las cantidades se cargan directamente
+          desde nuestra base de datos en Supabase.
+        </p>
+      </div>
+    </section>
   </header>
 
-  <main class="contenedor">
-    <section class="panel">
-      <div class="titulo-panel">
+  <main>
+    <section
+      class="seccion-estadisticas contenedor"
+      id="estadisticas"
+    >
+      <article class="estadistica">
+        <span>Productos</span>
+        <strong id="total-productos">0</strong>
+        <small>Modelos registrados</small>
+      </article>
+
+      <article class="estadistica">
+        <span>Unidades</span>
+        <strong id="total-unidades">0</strong>
+        <small>Disponibles en inventario</small>
+      </article>
+
+      <article class="estadistica">
+        <span>Valor del inventario</span>
+        <strong id="valor-inventario">$0.00</strong>
+        <small>Calculado al precio de venta</small>
+      </article>
+
+      <article class="estadistica">
+        <span>Stock bajo</span>
+        <strong id="stock-bajo">0</strong>
+        <small>Productos con menos de 10</small>
+      </article>
+    </section>
+
+    <section class="seccion-productos contenedor" id="productos">
+      <div class="encabezado-seccion">
         <div>
-          <h2>Inventario</h2>
-          <p>Productos disponibles en la tienda</p>
+          <span class="subtitulo">Catálogo</span>
+          <h2>Productos disponibles</h2>
+
+          <p>
+            Busca componentes y verifica su precio y disponibilidad.
+          </p>
         </div>
 
-        <input
-          type="search"
-          id="buscar"
-          placeholder="Buscar producto"
-        >
+        <div class="controles">
+          <label class="campo">
+            <span>Buscar</span>
+
+            <input
+              type="search"
+              id="buscar"
+              placeholder="Ejemplo: Ryzen, RTX, SSD..."
+            >
+          </label>
+
+          <label class="campo">
+            <span>Categoría</span>
+
+            <select id="filtro-categoria">
+              <option value="todas">Todas las categorías</option>
+              <option value="1">Procesadores</option>
+              <option value="2">Tarjetas gráficas</option>
+              <option value="3">Memoria RAM</option>
+              <option value="4">Almacenamiento</option>
+              <option value="5">Motherboards</option>
+              <option value="6">Fuentes de poder</option>
+              <option value="7">Periféricos</option>
+              <option value="8">Accesorios</option>
+            </select>
+          </label>
+        </div>
       </div>
 
       <div id="mensaje" class="mensaje">
         Cargando productos...
       </div>
 
-      <div class="tabla-contenedor">
-        <table>
-          <thead>
-            <tr>
-              <th>Producto</th>
-              <th>Descripción</th>
-              <th>Precio</th>
-              <th>Stock</th>
-            </tr>
-          </thead>
-
-          <tbody id="lista-productos"></tbody>
-        </table>
-      </div>
+      <div id="lista-productos" class="cuadricula-productos"></div>
     </section>
   </main>
+
+  <footer id="contacto">
+    <div class="contenedor contenido-footer">
+      <div>
+        <strong>TechZone Inventory</strong>
+        <p>Tecnología, componentes y hardware.</p>
+      </div>
+
+      <p>
+        Proyecto desarrollado con GitHub Pages y Supabase.
+      </p>
+    </div>
+  </footer>
 
   <script src="app.js"></script>
 </body>
