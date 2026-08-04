@@ -64,15 +64,7 @@ async function cargarProductos() {
 
   const { data, error } = await clienteSupabase
     .from("productos")
-    .select(`
-      id,
-      nombre,
-      descripcion,
-      precio_venta,
-      stock,
-      categoria_id,
-      imagen_url
-    `)
+    .select("*")
     .order("nombre");
 
   if (error) {
