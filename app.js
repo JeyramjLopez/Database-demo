@@ -70,7 +70,7 @@ async function cargarProductos() {
       descripcion,
       precio_venta,
       stock,
-      categoria_id
+      categoria_id,
       imagen_url
     `)
     .order("nombre");
