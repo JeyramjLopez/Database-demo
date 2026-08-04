@@ -1,6 +1,10 @@
 const SUPABASE_URL = "https://cruapwkltiohggwqdsyu.supabase.co";
 const SUPABASE_KEY = "sb_publishable_NtZ-jibltXYtMiDR3xvRRg_BGir-QBO";
+const formularioProducto =
+  document.querySelector("#formulario-producto");
 
+const mensajeFormulario =
+  document.querySelector("#mensaje-formulario");
 const clienteSupabase = supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
@@ -8,6 +12,10 @@ const clienteSupabase = supabase.createClient(
 const listaProductos = document.querySelector("#lista-productos");
 const mensaje = document.querySelector("#mensaje");
 const buscador = document.querySelector("#buscar");
+let carrito = [];
+
+const botonCarrito = document.querySelector("#abrir-carrito");
+const contadorCarrito = document.querySelector("#contador-carrito");
 const filtroCategoria = document.querySelector("#filtro-categoria");
 
 const totalProductosElemento =
@@ -23,7 +31,21 @@ const stockBajoElemento =
   document.querySelector("#stock-bajo");
 
 let productos = [];
+function actualizarContadorCarrito() {
+  contadorCarrito.textContent = carrito.length;
+}
 
+function agregarAlCarrito(idProducto) {
+  const producto = productos.find(p => p.id === idProducto);
+
+  if (!producto) return;
+
+  carrito.push(producto);
+
+  actualizarContadorCarrito();
+
+  alert(producto.nombre + " agregado al carrito");
+}
 const categorias = {
   1: {
     nombre: "Procesadores",
@@ -58,7 +80,70 @@ const categorias = {
     icono: "🔧"
   }
 };
+formularioProducto.addEventListener("submit", async (evento) => {
+  evento.preventDefault();
 
+  mensajeFormulario.className = "mensaje-formulario";
+  mensajeFormulario.textContent = "Guardando producto...";
+
+  const nuevoProducto = {
+    nombre: document
+      .querySelector("#producto-nombre")
+      .value
+      .trim(),
+
+    descripcion: document
+      .querySelector("#producto-descripcion")
+      .value
+      .trim(),
+
+    precio_compra: Number(
+      document.querySelector("#producto-precio-compra").value
+    ),
+
+    precio_venta: Number(
+      document.querySelector("#producto-precio-venta").value
+    ),
+
+    stock: Number(
+      document.querySelector("#producto-stock").value
+    ),
+
+    categoria_id: Number(
+      document.querySelector("#producto-categoria").value
+    ),
+
+    proveedor_id: Number(
+      document.querySelector("#producto-proveedor").value
+    ),
+
+    imagen_url:
+      document.querySelector("#producto-imagen").value.trim() ||
+      null
+  };
+
+  const { error } = await clienteSupabase
+    .from("productos")
+    .insert(nuevoProducto);
+
+  if (error) {
+    console.error("Error al guardar:", error);
+
+    mensajeFormulario.classList.add("error");
+    mensajeFormulario.textContent =
+      `No se pudo guardar: ${error.message}`;
+
+    return;
+  }
+
+  mensajeFormulario.classList.add("exito");
+  mensajeFormulario.textContent =
+    "Producto guardado correctamente.";
+
+  formularioProducto.reset();
+
+  await cargarProductos();
+});
 async function cargarProductos() {
   mensaje.textContent = "Cargando productos desde Supabase...";
 
@@ -207,12 +292,23 @@ function mostrarProductos(lista) {
             ${estadoStock.texto}
           </span>
         </div>
+        <button
+  class="boton-agregar"
+  data-id="${producto.id}"
+  type="button"
+>
+  Agregar al carrito
+</button>
       </div>
     `;
 
     listaProductos.appendChild(tarjeta);
   }
+const botonAgregar = tarjeta.querySelector(".boton-agregar");
 
+botonAgregar.addEventListener("click", () => {
+    agregarAlCarrito(producto.id);
+});
   mensaje.textContent =
     `${lista.length} productos encontrados`;
 }

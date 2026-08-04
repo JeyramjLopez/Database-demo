@@ -505,4 +505,248 @@ footer {
   height: 165px;
   object-fit: contain;
   padding: 18px;
+}.boton-carrito {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 14px;
+  color: var(--texto);
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#contador-carrito {
+  display: grid;
+  min-width: 24px;
+  height: 24px;
+  place-items: center;
+  padding: 0 6px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #06111d;
+  background: var(--primario);
+  border-radius: 999px;
+}
+
+.boton-agregar {
+  width: 100%;
+  min-height: 42px;
+  margin-top: 18px;
+  font-weight: 800;
+  color: #06111d;
+  background: linear-gradient(135deg, #67e8f9, #38bdf8);
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.boton-agregar:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.fondo-carrito {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  visibility: hidden;
+  background: rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  transition: 0.25s ease;
+}
+
+.fondo-carrito.activo {
+  visibility: visible;
+  opacity: 1;
+}
+
+.panel-carrito {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  width: min(430px, 100%);
+  height: 100vh;
+  flex-direction: column;
+  padding: 25px;
+  background: #0b1323;
+  border-left: 1px solid var(--borde);
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+}
+
+.panel-carrito.activo {
+  transform: translateX(0);
+}
+
+.carrito-encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--borde);
+}
+
+.carrito-encabezado h2 {
+  margin: 0;
+}
+
+.cerrar-carrito {
+  width: 40px;
+  height: 40px;
+  color: var(--texto);
+  background: transparent;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.lista-carrito {
+  flex: 1;
+  overflow-y: auto;
+  padding-block: 20px;
+}
+
+.carrito-vacio {
+  padding: 40px 10px;
+  text-align: center;
+  color: var(--texto-suave);
+}
+
+.item-carrito {
+  display: grid;
+  grid-template-columns: 75px 1fr;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--borde);
+}
+
+.item-carrito img {
+  width: 75px;
+  height: 75px;
+  object-fit: contain;
+  background: #121d31;
+  border-radius: 10px;
+}
+
+.item-carrito h3 {
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+}
+
+.item-carrito p {
+  margin: 0;
+  color: var(--texto-suave);
+}
+
+.controles-cantidad {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.controles-cantidad button {
+  width: 30px;
+  height: 30px;
+  color: var(--texto);
+  background: #162238;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.eliminar-carrito {
+  margin-left: auto;
+  color: #fca5a5 !important;
+}
+
+.carrito-resumen {
+  padding-top: 20px;
+  border-top: 1px solid var(--borde);
+}
+
+.fila-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  font-size: 1.15rem;
+}
+
+.boton-pagar {
+  width: 100%;
+  min-height: 48px;
+  font-weight: 800;
+  color: #06111d;
+  background: linear-gradient(135deg, #67e8f9, #38bdf8);
+  border: 0;
+  border-radius: 11px;
+  cursor: pointer;
+}.seccion-formulario {
+  padding-top: 90px;
+}
+
+.formulario-producto {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 30px;
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+}
+
+.formulario-producto .campo {
+  min-width: 0;
+}
+
+.campo-completo {
+  grid-column: 1 / -1;
+}
+
+textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 13px;
+  resize: vertical;
+  color: var(--texto);
+  font: inherit;
+  background: #0b1323;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  outline: none;
+}
+
+textarea:focus {
+  border-color: var(--primario);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
+}
+
+.mensaje-formulario {
+  margin: 15px 0 0;
+  color: var(--texto-suave);
+}
+
+.mensaje-formulario.exito {
+  color: #86efac;
+}
+
+.mensaje-formulario.error {
+  color: #fca5a5;
+}
+
+@media (max-width: 650px) {
+  .formulario-producto {
+    grid-template-columns: 1fr;
+  }
+
+  .campo-completo {
+    grid-column: auto;
+  }
 }

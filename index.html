@@ -34,10 +34,15 @@
       </a>
 
       <div class="enlaces">
+        <a href="#administrar">Administrar</a>
         <a href="#productos">Productos</a>
         <a href="#estadisticas">Inventario</a>
         <a href="#contacto">Contacto</a>
       </div>
+      <button id="abrir-carrito" class="boton-carrito" type="button">
+  🛒 Carrito
+  <span id="contador-carrito">0</span>
+</button>
     </nav>
 
     <section class="hero contenedor">
@@ -101,7 +106,101 @@
         <small>Productos con menos de 10</small>
       </article>
     </section>
+<section class="seccion-formulario contenedor" id="administrar">
+  <div class="encabezado-seccion">
+    <div>
+      <span class="subtitulo">Administración</span>
+      <h2>Registrar producto</h2>
+      <p>Agrega productos directamente a la base de datos.</p>
+    </div>
+  </div>
 
+  <form id="formulario-producto" class="formulario-producto">
+    <label class="campo">
+      <span>Nombre</span>
+      <input id="producto-nombre" type="text" required>
+    </label>
+
+    <label class="campo campo-completo">
+      <span>Descripción</span>
+      <textarea id="producto-descripcion" required></textarea>
+    </label>
+
+    <label class="campo">
+      <span>Precio de compra</span>
+      <input
+        id="producto-precio-compra"
+        type="number"
+        min="0"
+        step="0.01"
+        required
+      >
+    </label>
+
+    <label class="campo">
+      <span>Precio de venta</span>
+      <input
+        id="producto-precio-venta"
+        type="number"
+        min="0"
+        step="0.01"
+        required
+      >
+    </label>
+
+    <label class="campo">
+      <span>Stock</span>
+      <input
+        id="producto-stock"
+        type="number"
+        min="0"
+        required
+      >
+    </label>
+
+    <label class="campo">
+      <span>Categoría</span>
+      <select id="producto-categoria" required>
+        <option value="">Selecciona una categoría</option>
+        <option value="1">Procesadores</option>
+        <option value="2">Tarjetas gráficas</option>
+        <option value="3">Memoria RAM</option>
+        <option value="4">Almacenamiento</option>
+        <option value="5">Motherboards</option>
+        <option value="6">Fuentes de poder</option>
+        <option value="7">Periféricos</option>
+        <option value="8">Accesorios</option>
+      </select>
+    </label>
+
+    <label class="campo">
+      <span>Proveedor</span>
+      <select id="producto-proveedor" required>
+        <option value="">Selecciona un proveedor</option>
+        <option value="1">Proveedor 1</option>
+        <option value="2">Proveedor 2</option>
+        <option value="3">Proveedor 3</option>
+      </select>
+    </label>
+
+    <label class="campo campo-completo">
+      <span>URL de imagen</span>
+      <input
+        id="producto-imagen"
+        type="url"
+        placeholder="https://..."
+      >
+    </label>
+
+    <div class="campo-completo">
+      <button class="boton-principal" type="submit">
+        Guardar producto
+      </button>
+
+      <p id="mensaje-formulario" class="mensaje-formulario"></p>
+    </div>
+  </form>
+</section>
     <section class="seccion-productos contenedor" id="productos">
       <div class="encabezado-seccion">
         <div>
