@@ -303,12 +303,13 @@ function mostrarProductos(lista) {
     `;
 
     listaProductos.appendChild(tarjeta);
-  }
+  
 const botonAgregar = tarjeta.querySelector(".boton-agregar");
 
 botonAgregar.addEventListener("click", () => {
     agregarAlCarrito(producto.id);
 });
+}
   mensaje.textContent =
     `${lista.length} productos encontrados`;
 }
