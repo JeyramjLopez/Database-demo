@@ -71,6 +71,7 @@ async function cargarProductos() {
       precio_venta,
       stock,
       categoria_id
+      imagen_url
     `)
     .order("nombre");
 
@@ -177,8 +178,16 @@ function mostrarProductos(lista) {
 
     tarjeta.innerHTML = `
       <div class="producto-imagen">
-        ${categoria.icono}
-      </div>
+  ${
+    producto.imagen_url
+      ? `<img
+          src="${producto.imagen_url}"
+          alt="${producto.nombre}"
+          class="imagen-real-producto"
+        >`
+      : categoria.icono
+  }
+</div>
 
       <div class="producto-contenido">
         <span class="producto-categoria">
