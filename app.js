@@ -16,6 +16,20 @@ let carrito = [];
 
 const botonCarrito = document.querySelector("#abrir-carrito");
 const contadorCarrito = document.querySelector("#contador-carrito");
+const panelCarrito =
+  document.querySelector("#panel-carrito");
+
+const fondoCarrito =
+  document.querySelector("#fondo-carrito");
+
+const cerrarCarrito =
+  document.querySelector("#cerrar-carrito");
+
+const listaCarrito =
+  document.querySelector("#lista-carrito");
+
+const totalCarrito =
+  document.querySelector("#total-carrito");
 const filtroCategoria = document.querySelector("#filtro-categoria");
 
 const totalProductosElemento =
@@ -34,7 +48,20 @@ let productos = [];
 function actualizarContadorCarrito() {
   contadorCarrito.textContent = carrito.length;
 }
+function abrirCarrito() {
+  panelCarrito.classList.add("activo");
+  fondoCarrito.classList.add("activo");
+}
 
+function cerrarPanelCarrito() {
+  panelCarrito.classList.remove("activo");
+  fondoCarrito.classList.remove("activo");
+}
+botonCarrito.addEventListener("click", abrirCarrito);
+
+cerrarCarrito.addEventListener("click", cerrarPanelCarrito);
+
+fondoCarrito.addEventListener("click", cerrarPanelCarrito);
 function agregarAlCarrito(idProducto) {
   const producto = productos.find(p => p.id === idProducto);
 

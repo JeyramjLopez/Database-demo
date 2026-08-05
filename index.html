@@ -261,7 +261,46 @@
       </p>
     </div>
   </footer>
+<div id="fondo-carrito" class="fondo-carrito"></div>
 
+<aside id="panel-carrito" class="panel-carrito">
+  <div class="carrito-encabezado">
+    <div>
+      <span class="subtitulo">Tu compra</span>
+      <h2>Carrito</h2>
+    </div>
+
+    <button
+      id="cerrar-carrito"
+      class="cerrar-carrito"
+      type="button"
+      aria-label="Cerrar carrito"
+    >
+      ✕
+    </button>
+  </div>
+
+  <div id="lista-carrito" class="lista-carrito">
+    <div class="carrito-vacio">
+      Tu carrito está vacío.
+    </div>
+  </div>
+
+  <div class="carrito-resumen">
+    <div class="fila-total">
+      <span>Total</span>
+      <strong id="total-carrito">$0.00</strong>
+    </div>
+
+    <button
+      id="boton-pagar"
+      class="boton-pagar"
+      type="button"
+    >
+      Proceder al pago
+    </button>
+  </div>
+</aside>
   <script src="app.js"></script>
 </body>
 </html>
