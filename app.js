@@ -43,6 +43,85 @@ const valorInventarioElemento =
 
 const stockBajoElemento =
   document.querySelector("#stock-bajo");
+  const formularioLogin =
+  document.querySelector("#formulario-login");
+
+const botonRegistro =
+  document.querySelector("#boton-registro");
+
+const mensajeLogin =
+  document.querySelector("#mensaje-login");
+
+const loginEmail =
+  document.querySelector("#login-email");
+
+const loginPassword =
+  document.querySelector("#login-password");
+  botonRegistro.addEventListener("click", async () => {
+  const email = loginEmail.value.trim();
+  const password = loginPassword.value;
+
+  if (!email || !password) {
+    mensajeLogin.textContent =
+      "Escribe tu correo y contraseña.";
+    return;
+  }
+
+  mensajeLogin.textContent =
+    "Creando cuenta...";
+
+  const { data, error } =
+    await clienteSupabase.auth.signUp({
+      email,
+      password
+    });
+
+  if (error) {
+    console.error(error);
+
+    mensajeLogin.textContent =
+      `Error: ${error.message}`;
+
+    return;
+  }
+
+  mensajeLogin.textContent =
+    "Cuenta creada. Revisa tu correo si Supabase solicita confirmación.";
+
+  console.log("Usuario creado:", data);
+});
+formularioLogin.addEventListener(
+  "submit",
+  async (evento) => {
+    evento.preventDefault();
+
+    const email = loginEmail.value.trim();
+    const password = loginPassword.value;
+
+    mensajeLogin.textContent =
+      "Iniciando sesión...";
+
+    const { data, error } =
+      await clienteSupabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+    if (error) {
+      console.error(error);
+
+      mensajeLogin.textContent =
+        `No se pudo iniciar sesión: ${error.message}`;
+
+      return;
+    }
+
+    mensajeLogin.textContent =
+      "Inicio de sesión correcto.";
+
+    console.log("Sesión:", data);
+  }
+);
 
 let productos = [];
 function actualizarContadorCarrito() {
