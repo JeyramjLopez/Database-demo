@@ -302,6 +302,49 @@
       class="mensaje-formulario"
     ></p>
   </form>
+  <div id="seccion-2fa" class="seccion-2fa">
+  <h3>Verificación en 2 pasos</h3>
+
+  <p>
+    Escanea el código QR con Google Authenticator,
+    Microsoft Authenticator o una app compatible.
+  </p>
+
+  <button
+    id="activar-2fa"
+    class="boton-principal"
+    type="button"
+  >
+    Activar verificación en 2 pasos
+  </button>
+
+  <div id="contenedor-qr"></div>
+
+  <label class="campo">
+    <span>Código de 6 dígitos</span>
+
+    <input
+      id="codigo-2fa"
+      type="text"
+      inputmode="numeric"
+      maxlength="6"
+      placeholder="123456"
+    >
+  </label>
+
+  <button
+    id="verificar-2fa"
+    class="boton-secundario"
+    type="button"
+  >
+    Verificar código
+  </button>
+
+  <p
+    id="mensaje-2fa"
+    class="mensaje-formulario"
+  ></p>
+</div>
 </section>
   <footer id="contacto">
     <div class="contenedor contenido-footer">

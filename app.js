@@ -57,6 +57,52 @@ const loginEmail =
 
 const loginPassword =
   document.querySelector("#login-password");
+  const seccion2FA = document.querySelector("#seccion-2fa");
+const botonActivar2FA = document.querySelector("#activar-2fa");
+const contenedorQR = document.querySelector("#contenedor-qr");
+const codigo2FA = document.querySelector("#codigo-2fa");
+const botonVerificar2FA = document.querySelector("#verificar-2fa");
+const mensaje2FA = document.querySelector("#mensaje-2fa");
+let factorId2FA = null;
+botonActivar2FA.addEventListener("click", async () => {
+  mensaje2FA.textContent = "Generando código QR...";
+
+  const { data: usuarioData } =
+    await clienteSupabase.auth.getUser();
+
+  if (!usuarioData.user) {
+    mensaje2FA.textContent =
+      "Primero debes iniciar sesión.";
+    return;
+  }
+
+  const { data, error } =
+    await clienteSupabase.auth.mfa.enroll({
+      factorType: "totp",
+      friendlyName: "TechZone Authenticator"
+    });
+
+  if (error) {
+    console.error("Error al activar 2FA:", error);
+    mensaje2FA.textContent =
+      `No se pudo activar 2FA: ${error.message}`;
+    return;
+  }
+
+  factorId2FA = data.id;
+
+  contenedorQR.innerHTML = `
+    <p>Escanea este código con tu aplicación Authenticator:</p>
+    ${data.totp.qr_code}
+    <p>
+      Si no puedes escanearlo, usa esta clave:
+      <strong>${data.totp.secret}</strong>
+    </p>
+  `;
+
+  mensaje2FA.textContent =
+    "Escanea el QR y luego escribe el código de 6 dígitos.";
+});
   botonRegistro.addEventListener("click", async () => {
   const email = loginEmail.value.trim();
   const password = loginPassword.value;
