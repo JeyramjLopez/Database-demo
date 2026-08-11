@@ -52,7 +52,95 @@ function abrirCarrito() {
   panelCarrito.classList.add("activo");
   fondoCarrito.classList.add("activo");
 }
+function mostrarCarrito() {
+  console.log("Mostrando carrito:", carrito);
+  listaCarrito.innerHTML = "";
 
+  if (carrito.length === 0) {
+    listaCarrito.innerHTML = `
+      <div class="carrito-vacio">
+        Tu carrito está vacío.
+      </div>
+    `;
+
+    totalCarrito.textContent = "$0.00";
+    return;
+  }
+
+  let total = 0;
+
+  for (const producto of carrito) {
+    total += Number(producto.precio_venta);
+
+    const itemCarrito =
+      document.createElement("article");
+
+    itemCarrito.className = "item-carrito";
+
+    itemCarrito.innerHTML = `
+      ${
+        producto.imagen_url
+          ? `<img
+              src="${producto.imagen_url}"
+              alt="${producto.nombre}"
+            >`
+          : `<div class="imagen-carrito-vacia">💻</div>`
+      }
+
+      <div>
+        <h3>${producto.nombre}</h3>
+
+        <p>
+          ${Number(producto.precio_venta).toLocaleString(
+            "en-US",
+            {
+              style: "currency",
+              currency: "USD"
+            }
+          )}
+        </p>
+
+        <button
+          class="eliminar-carrito"
+          type="button"
+        >
+          Eliminar
+        </button>
+      </div>
+    `;
+
+    const botonEliminar =
+      itemCarrito.querySelector(".eliminar-carrito");
+
+    botonEliminar.addEventListener("click", () => {
+      eliminarDelCarrito(producto.id);
+    });
+
+    listaCarrito.appendChild(itemCarrito);
+  }
+
+  totalCarrito.textContent = total.toLocaleString(
+    "en-US",
+    {
+      style: "currency",
+      currency: "USD"
+    }
+  );
+}
+function eliminarDelCarrito(idProducto) {
+  const posicion = carrito.findIndex(
+    (producto) => producto.id === idProducto
+  );
+
+  if (posicion === -1) {
+    return;
+  }
+
+  carrito.splice(posicion, 1);
+
+  actualizarContadorCarrito();
+  mostrarCarrito();
+}
 function cerrarPanelCarrito() {
   panelCarrito.classList.remove("activo");
   fondoCarrito.classList.remove("activo");
@@ -67,11 +155,14 @@ function agregarAlCarrito(idProducto) {
 
   if (!producto) return;
 
-  carrito.push(producto);
+carrito.push(producto);
 
-  actualizarContadorCarrito();
+console.log("Producto agregado:", producto);
+console.log("Contenido del carrito:", carrito);
 
-  alert(producto.nombre + " agregado al carrito");
+actualizarContadorCarrito();
+mostrarCarrito();
+abrirCarrito();
 }
 const categorias = {
   1: {

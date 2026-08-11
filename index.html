@@ -38,6 +38,7 @@
         <a href="#productos">Productos</a>
         <a href="#estadisticas">Inventario</a>
         <a href="#contacto">Contacto</a>
+        <a href="#seguridad">Iniciar sesión</a>
       </div>
       <button id="abrir-carrito" class="boton-carrito" type="button">
   🛒 Carrito
@@ -248,7 +249,60 @@
       <div id="lista-productos" class="cuadricula-productos"></div>
     </section>
   </main>
+<section id="seguridad" class="seccion-seguridad contenedor">
+  <div class="encabezado-seccion">
+    <div>
+      <span class="subtitulo">Seguridad</span>
+      <h2>Iniciar sesión</h2>
+      <p>
+        Accede con tu correo y contraseña.
+      </p>
+    </div>
+  </div>
 
+  <form id="formulario-login" class="formulario-login">
+    <label class="campo">
+      <span>Correo electrónico</span>
+      <input
+        id="login-email"
+        type="email"
+        placeholder="correo@ejemplo.com"
+        required
+      >
+    </label>
+
+    <label class="campo">
+      <span>Contraseña</span>
+      <input
+        id="login-password"
+        type="password"
+        placeholder="Tu contraseña"
+        required
+      >
+    </label>
+
+    <button
+      id="boton-login"
+      class="boton-principal"
+      type="submit"
+    >
+      Iniciar sesión
+    </button>
+
+    <button
+      id="boton-registro"
+      class="boton-secundario"
+      type="button"
+    >
+      Crear cuenta
+    </button>
+
+    <p
+      id="mensaje-login"
+      class="mensaje-formulario"
+    ></p>
+  </form>
+</section>
   <footer id="contacto">
     <div class="contenedor contenido-footer">
       <div>
