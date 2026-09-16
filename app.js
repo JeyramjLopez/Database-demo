@@ -57,6 +57,11 @@ const loginEmail =
 
 const loginPassword =
   document.querySelector("#login-password");
+  const enlaceAdministrar =
+  document.querySelector("#enlace-administrar");
+
+const seccionAdministrar =
+  document.querySelector("#administrar");
   const seccion2FA = document.querySelector("#seccion-2fa");
 const botonActivar2FA = document.querySelector("#activar-2fa");
 const contenedorQR = document.querySelector("#contenedor-qr");
@@ -64,6 +69,28 @@ const codigo2FA = document.querySelector("#codigo-2fa");
 const botonVerificar2FA = document.querySelector("#verificar-2fa");
 const mensaje2FA = document.querySelector("#mensaje-2fa");
 let factorId2FA = null;
+async function controlarAccesoAdmin() {
+  const { data } = await clienteSupabase.auth.getUser();
+
+  const usuario = data.user;
+
+  const esAdmin =
+    usuario?.app_metadata?.role === "admin";
+
+  if (esAdmin) {
+    enlaceAdministrar.style.display = "";
+    seccionAdministrar.style.display = "";
+  } else {
+    enlaceAdministrar.style.display = "none";
+    seccionAdministrar.style.display = "none";
+  }
+}
+
+controlarAccesoAdmin();
+
+clienteSupabase.auth.onAuthStateChange(() => {
+  controlarAccesoAdmin();
+});
 botonActivar2FA.addEventListener("click", async () => {
   mensaje2FA.textContent = "Generando código QR...";
 
