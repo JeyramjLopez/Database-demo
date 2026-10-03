@@ -102,36 +102,78 @@ function crearFilaBulk() {
   const fila = document.createElement("div");
   fila.className = "fila-bulk";
 
-  fila.innerHTML = `
-    <input class="bulk-nombre" type="text" placeholder="Nombre">
-    <input class="bulk-marca" type="text" placeholder="Marca">
-    <input class="bulk-modelo" type="text" placeholder="Modelo">
-    <input class="bulk-serie" type="text" placeholder="Serie">
+ fila.innerHTML = `
+  <input class="bulk-nombre" type="text" placeholder="Nombre">
+  <input class="bulk-marca" type="text" placeholder="Marca">
+  <input class="bulk-modelo" type="text" placeholder="Modelo">
+  <input class="bulk-serie" type="text" placeholder="Serie">
 
-    <select class="bulk-tipo">
-      <option value="">Tipo</option>
-      <option value="RAM">RAM</option>
-      <option value="SSD">SSD</option>
-      <option value="HDD">HDD</option>
-      <option value="CPU">CPU</option>
-      <option value="GPU">GPU</option>
-      <option value="Motherboard">Motherboard</option>
-      <option value="PSU">Fuente de poder</option>
-      <option value="Cooling">Refrigeración</option>
-    </select>
+  <select class="bulk-tipo">
+    <option value="">Tipo</option>
+    <option value="RAM">RAM</option>
+    <option value="SSD">SSD</option>
+    <option value="HDD">HDD</option>
+    <option value="CPU">CPU</option>
+    <option value="GPU">GPU</option>
+    <option value="Motherboard">Motherboard</option>
+    <option value="PSU">Fuente de poder</option>
+    <option value="Cooling">Refrigeración</option>
+    <option value="Periferico">Periférico</option>
+    <option value="Accesorio">Accesorio</option>
+  </select>
 
-    <input
-      class="bulk-capacidad"
-      type="text"
-      placeholder="32 GB / 1 TB"
-    >
+  <input
+    class="bulk-capacidad"
+    type="text"
+    placeholder="32 GB / 1 TB"
+  >
 
-    <input
-      class="bulk-velocidad"
-      type="text"
-      placeholder="6000 MT/s"
-    >
-  `;
+  <input
+    class="bulk-velocidad"
+    type="text"
+    placeholder="6000 MT/s"
+  >
+
+  <input
+    class="bulk-precio-compra"
+    type="number"
+    step="0.01"
+    placeholder="Precio compra"
+  >
+
+  <input
+    class="bulk-precio-venta"
+    type="number"
+    step="0.01"
+    placeholder="Precio venta"
+  >
+
+  <input
+    class="bulk-stock"
+    type="number"
+    min="0"
+    placeholder="Stock"
+  >
+
+  <select class="bulk-categoria">
+    <option value="">Categoría</option>
+    <option value="1">Procesadores</option>
+    <option value="2">Tarjetas gráficas</option>
+    <option value="3">Memoria RAM</option>
+    <option value="4">Almacenamiento</option>
+    <option value="5">Motherboards</option>
+    <option value="6">Fuentes de poder</option>
+    <option value="7">Periféricos</option>
+    <option value="8">Accesorios</option>
+  </select>
+
+  <select class="bulk-proveedor">
+    <option value="">Proveedor</option>
+    <option value="1">Tech Distributors PR</option>
+    <option value="2">Caribbean Hardware Supply</option>
+    <option value="3">Digital Components LLC</option>
+  </select>
+`;
 
   filasBulk.appendChild(fila);
 }
@@ -142,6 +184,111 @@ for (let i = 0; i < 6; i++) {
 
 botonAgregarFilaBulk.addEventListener("click", () => {
   crearFilaBulk();
+});
+botonGuardarBulk.addEventListener("click", async () => {
+  mensajeBulk.textContent = "";
+
+  const filas = document.querySelectorAll(".fila-bulk");
+  const productosBulk = [];
+
+  for (const fila of filas) {
+    const nombre =
+      fila.querySelector(".bulk-nombre").value.trim();
+
+    const marca =
+      fila.querySelector(".bulk-marca").value.trim();
+
+    const modelo =
+      fila.querySelector(".bulk-modelo").value.trim();
+
+    const serie =
+      fila.querySelector(".bulk-serie").value.trim();
+
+    const tipo =
+      fila.querySelector(".bulk-tipo").value;
+
+    const capacidad =
+      fila.querySelector(".bulk-capacidad").value.trim();
+
+    const velocidad =
+      fila.querySelector(".bulk-velocidad").value.trim();
+
+    const precioCompra =
+      fila.querySelector(".bulk-precio-compra").value;
+
+    const precioVenta =
+      fila.querySelector(".bulk-precio-venta").value;
+
+    const stock =
+      fila.querySelector(".bulk-stock").value;
+
+    const categoria =
+      fila.querySelector(".bulk-categoria").value;
+
+    const proveedor =
+      fila.querySelector(".bulk-proveedor").value;
+
+    // Ignora filas completamente vacías
+    if (!nombre) {
+      continue;
+    }
+
+    if (
+      !precioCompra ||
+      !precioVenta ||
+      !categoria ||
+      !proveedor
+    ) {
+      mensajeBulk.textContent =
+        "Completa los campos obligatorios de todos los productos.";
+      return;
+    }
+
+    productosBulk.push({
+      nombre: nombre,
+      marca: marca || null,
+      modelo: modelo || null,
+      serie: serie || null,
+      tipo_componente: tipo || null,
+      capacidad: capacidad || null,
+      velocidad: velocidad || null,
+      precio_compra: Number(precioCompra),
+      precio_venta: Number(precioVenta),
+      stock: stock ? Number(stock) : 0,
+      categoria_id: Number(categoria),
+      proveedor_id: Number(proveedor)
+    });
+  }
+
+  if (productosBulk.length === 0) {
+    mensajeBulk.textContent =
+      "Debes completar por lo menos un producto.";
+    return;
+  }
+
+  const { error } = await clienteSupabase
+    .from("productos")
+    .insert(productosBulk);
+
+  if (error) {
+    console.error("Error en Bulk Insert:", error);
+
+    mensajeBulk.textContent =
+      `No se pudieron guardar los productos: ${error.message}`;
+
+    return;
+  }
+
+  mensajeBulk.textContent =
+    `${productosBulk.length} productos guardados correctamente.`;
+
+  filasBulk.innerHTML = "";
+
+  for (let i = 0; i < 6; i++) {
+    crearFilaBulk();
+  }
+
+  cargarProductos();
 });
 botonActivar2FA.addEventListener("click", async () => {
   mensaje2FA.textContent = "Generando código QR...";
