@@ -115,7 +115,61 @@
       <p>Agrega productos directamente a la base de datos.</p>
     </div>
   </div>
+<hr>
 
+<div class="bulk-productos">
+  <div class="encabezado-seccion">
+    <div>
+      <span class="subtitulo">Entrada masiva</span>
+      <h2>Agregar varios productos</h2>
+      <p>
+        Registra varios componentes de PC en una sola operación.
+      </p>
+    </div>
+  </div>
+
+  <div class="tabla-bulk">
+
+    <div class="fila-bulk encabezado-bulk">
+      <span>Nombre</span>
+      <span>Marca</span>
+      <span>Modelo</span>
+      <span>Serie</span>
+      <span>Tipo</span>
+      <span>Capacidad</span>
+      <span>Velocidad</span>
+    </div>
+
+    <div id="filas-bulk"></div>
+
+  </div>
+
+  <div class="acciones-bulk">
+
+    <button
+      id="agregar-fila-bulk"
+      class="boton-secundario"
+      type="button"
+    >
+      + Agregar producto
+    </button>
+
+    <button
+      id="guardar-bulk"
+      class="boton-principal"
+      type="button"
+    >
+      Guardar todos
+    </button>
+
+  </div>
+
+  <p
+    id="mensaje-bulk"
+    class="mensaje-formulario"
+  ></p>
+
+</div>
   <form id="formulario-producto" class="formulario-producto">
     <label class="campo">
       <span>Nombre</span>

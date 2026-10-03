@@ -68,6 +68,13 @@ const contenedorQR = document.querySelector("#contenedor-qr");
 const codigo2FA = document.querySelector("#codigo-2fa");
 const botonVerificar2FA = document.querySelector("#verificar-2fa");
 const mensaje2FA = document.querySelector("#mensaje-2fa");
+const filasBulk = document.querySelector("#filas-bulk");
+const botonAgregarFilaBulk =
+  document.querySelector("#agregar-fila-bulk");
+const botonGuardarBulk =
+  document.querySelector("#guardar-bulk");
+const mensajeBulk =
+  document.querySelector("#mensaje-bulk");
 let factorId2FA = null;
 async function controlarAccesoAdmin() {
   const { data } = await clienteSupabase.auth.getUser();
@@ -90,6 +97,51 @@ controlarAccesoAdmin();
 
 clienteSupabase.auth.onAuthStateChange(() => {
   controlarAccesoAdmin();
+});
+function crearFilaBulk() {
+  const fila = document.createElement("div");
+  fila.className = "fila-bulk";
+
+  fila.innerHTML = `
+    <input class="bulk-nombre" type="text" placeholder="Nombre">
+    <input class="bulk-marca" type="text" placeholder="Marca">
+    <input class="bulk-modelo" type="text" placeholder="Modelo">
+    <input class="bulk-serie" type="text" placeholder="Serie">
+
+    <select class="bulk-tipo">
+      <option value="">Tipo</option>
+      <option value="RAM">RAM</option>
+      <option value="SSD">SSD</option>
+      <option value="HDD">HDD</option>
+      <option value="CPU">CPU</option>
+      <option value="GPU">GPU</option>
+      <option value="Motherboard">Motherboard</option>
+      <option value="PSU">Fuente de poder</option>
+      <option value="Cooling">Refrigeración</option>
+    </select>
+
+    <input
+      class="bulk-capacidad"
+      type="text"
+      placeholder="32 GB / 1 TB"
+    >
+
+    <input
+      class="bulk-velocidad"
+      type="text"
+      placeholder="6000 MT/s"
+    >
+  `;
+
+  filasBulk.appendChild(fila);
+}
+
+for (let i = 0; i < 6; i++) {
+  crearFilaBulk();
+}
+
+botonAgregarFilaBulk.addEventListener("click", () => {
+  crearFilaBulk();
 });
 botonActivar2FA.addEventListener("click", async () => {
   mensaje2FA.textContent = "Generando código QR...";
