@@ -118,41 +118,31 @@
 <hr>
 
 <div class="bulk-productos">
+
   <div class="encabezado-seccion">
     <div>
       <span class="subtitulo">Entrada masiva</span>
-      <h2>Agregar varios productos</h2>
+      <h2>Agregar productos en Bulk</h2>
+
       <p>
-        Registra varios componentes de PC en una sola operación.
+        Pega una línea por producto. Separa cada campo con |
       </p>
     </div>
   </div>
 
-  <div class="tabla-bulk">
+  <p>
+    <strong>Formato:</strong><br>
+    Nombre | Tipo | Precio compra | Precio venta |
+    Stock | Categoría | URL imagen | Especificaciones
+  </p>
 
-    <div class="fila-bulk encabezado-bulk">
-      <span>Nombre</span>
-      <span>Marca</span>
-      <span>Modelo</span>
-      <span>Serie</span>
-      <span>Tipo</span>
-      <span>Capacidad</span>
-      <span>Velocidad</span>
-    </div>
-
-    <div id="filas-bulk"></div>
-
-  </div>
+  <textarea
+    id="texto-bulk"
+    rows="14"
+    placeholder="MSI B650 Gaming Plus WiFi | Motherboard | 145 | 189.99 | 7 | Motherboards | https://imagen.com/producto.jpg | Socket=AM5; Chipset=B650; Formato=ATX; Memoria=DDR5; Slots RAM=4; M.2=3; WiFi=Wi-Fi 6E"
+  ></textarea>
 
   <div class="acciones-bulk">
-
-    <button
-      id="agregar-fila-bulk"
-      class="boton-secundario"
-      type="button"
-    >
-      + Agregar producto
-    </button>
 
     <button
       id="guardar-bulk"
@@ -170,8 +160,9 @@
   ></p>
 
 </div>
-  <form id="formulario-producto" class="formulario-producto">
-    <label class="campo">
+<form id="formulario-producto" class="formulario-producto">
+
+  <label class="campo">
       <span>Nombre</span>
       <input id="producto-nombre" type="text" required>
     </label>
