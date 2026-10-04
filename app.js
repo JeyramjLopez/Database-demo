@@ -68,11 +68,12 @@ const contenedorQR = document.querySelector("#contenedor-qr");
 const codigo2FA = document.querySelector("#codigo-2fa");
 const botonVerificar2FA = document.querySelector("#verificar-2fa");
 const mensaje2FA = document.querySelector("#mensaje-2fa");
-const filasBulk = document.querySelector("#filas-bulk");
-const botonAgregarFilaBulk =
-  document.querySelector("#agregar-fila-bulk");
+const textoBulk =
+  document.querySelector("#texto-bulk");
+
 const botonGuardarBulk =
   document.querySelector("#guardar-bulk");
+
 const mensajeBulk =
   document.querySelector("#mensaje-bulk");
 let factorId2FA = null;
