@@ -562,6 +562,228 @@ formularioProducto.addEventListener("submit", async (evento) => {
 
   await cargarProductos();
 });
+function crearResumenEspecificaciones(producto) {
+  const specs = producto.especificaciones || {};
+
+  if (
+    !specs ||
+    typeof specs !== "object" ||
+    Object.keys(specs).length === 0
+  ) {
+    return producto.descripcion || "Sin especificaciones.";
+  }
+
+  const normalizar = (texto) =>
+    String(texto)
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim();
+
+  const specsNormalizadas = {};
+
+  for (const [clave, valor] of Object.entries(specs)) {
+    specsNormalizadas[normalizar(clave)] = valor;
+  }
+
+  const leer = (...claves) => {
+    for (const clave of claves) {
+      const valor = specsNormalizadas[normalizar(clave)];
+
+      if (
+        valor !== undefined &&
+        valor !== null &&
+        String(valor).trim() !== ""
+      ) {
+        return String(valor).trim();
+      }
+    }
+
+    return null;
+  };
+
+  const tipo = normalizar(producto.tipo_componente || "");
+
+  let resumen = [];
+
+  // CPU
+  if (
+    tipo.includes("cpu") ||
+    tipo.includes("procesador")
+  ) {
+    const socket = leer("Socket");
+    const nucleos = leer("Núcleos", "Nucleos");
+    const hilos = leer("Hilos");
+    const turbo = leer(
+      "Turbo máximo",
+      "Turbo maximo"
+    );
+
+    if (socket) resumen.push(socket);
+    if (nucleos) resumen.push(`${nucleos} núcleos`);
+    if (hilos) resumen.push(`${hilos} hilos`);
+    if (turbo) resumen.push(`Hasta ${turbo}`);
+  }
+
+  // GPU
+  else if (
+    tipo.includes("gpu") ||
+    tipo.includes("tarjeta grafica")
+  ) {
+    const gpu = leer("GPU");
+    const vram = leer("VRAM");
+    const memoria = leer("Tipo memoria");
+    const fans = leer(
+      "Ventiladores",
+      "Refrigeración",
+      "Refrigeracion"
+    );
+
+    if (gpu) resumen.push(gpu);
+    if (vram) resumen.push(vram);
+    if (memoria) resumen.push(memoria);
+    if (fans) {
+      resumen.push(
+        /^\d+$/.test(fans)
+          ? `${fans} Fans`
+          : fans
+      );
+    }
+  }
+
+  // RAM
+  else if (tipo.includes("ram")) {
+    const memoria = leer(
+      "Tipo",
+      "Tipo RAM",
+      "Memoria"
+    );
+    const capacidad = leer(
+      "Capacidad",
+      "Capacidad RAM"
+    );
+    const velocidad = leer(
+      "Velocidad",
+      "Velocidad RAM"
+    );
+    const latencia = leer(
+      "Latencia",
+      "CAS Latency"
+    );
+
+    if (memoria) resumen.push(memoria);
+    if (capacidad) resumen.push(capacidad);
+    if (velocidad) resumen.push(velocidad);
+    if (latencia) resumen.push(latencia);
+  }
+
+  // Motherboard
+  else if (tipo.includes("motherboard")) {
+    const socket = leer("Socket");
+    const chipset = leer("Chipset");
+    const formato = leer("Formato");
+    const memoria = leer("Memoria");
+
+    if (socket) resumen.push(socket);
+    if (chipset) resumen.push(chipset);
+    if (formato) resumen.push(formato);
+    if (memoria) resumen.push(memoria);
+  }
+
+  // Fuente de poder
+  else if (
+    tipo.includes("psu") ||
+    tipo.includes("power supply")
+  ) {
+    const potencia = leer("Potencia");
+    const certificacion = leer(
+      "Certificación",
+      "Certificacion"
+    );
+    const modular = leer("Modular");
+    const estandar = leer("Estándar", "Estandar");
+
+    if (potencia) resumen.push(potencia);
+    if (certificacion) resumen.push(certificacion);
+    if (modular) resumen.push(modular);
+    if (estandar) resumen.push(estandar);
+  }
+
+  // Almacenamiento
+  else if (
+    tipo.includes("ssd") ||
+    tipo.includes("nvme") ||
+    tipo.includes("hdd") ||
+    tipo.includes("microsd") ||
+    tipo.includes("sd card") ||
+    tipo.includes("nas")
+  ) {
+    const capacidad = leer(
+      "Capacidad",
+      "Capacidad total"
+    );
+    const interfaz = leer("Interfaz");
+    const lectura = leer("Lectura");
+    const escritura = leer("Escritura");
+
+    if (capacidad) resumen.push(capacidad);
+    if (interfaz) resumen.push(interfaz);
+    if (lectura) resumen.push(`${lectura} lectura`);
+    if (escritura) {
+      resumen.push(`${escritura} escritura`);
+    }
+  }
+
+  // Cables y adaptadores
+  else if (
+    tipo.includes("cable") ||
+    tipo.includes("adapter")
+  ) {
+    const categoria = leer(
+      "Categoria cable",
+      "Categoría cable",
+      "Tipo"
+    );
+    const longitud = leer("Longitud");
+    const velocidad = leer(
+      "Velocidad",
+      "Velocidad datos"
+    );
+    const conectores = leer(
+      "Conectores",
+      "Conector"
+    );
+
+    if (categoria) resumen.push(categoria);
+    if (conectores) resumen.push(conectores);
+    if (velocidad) resumen.push(velocidad);
+    if (longitud) resumen.push(longitud);
+  }
+
+  // Si aparece un tipo que no hemos programado
+  if (resumen.length === 0) {
+    const ignorar = [
+      "marca",
+      "modelo",
+      "serie",
+      "color",
+      "uso"
+    ];
+
+    resumen = Object.entries(specs)
+      .filter(
+        ([clave]) =>
+          !ignorar.includes(normalizar(clave))
+      )
+      .slice(0, 4)
+      .map(([, valor]) => valor);
+  }
+
+  return resumen
+    .filter(Boolean)
+    .slice(0, 4)
+    .join(" • ");
+}
 async function cargarProductos() {
   mensaje.textContent = "Cargando productos desde Supabase...";
 
@@ -692,7 +914,7 @@ function mostrarProductos(lista) {
         <h3>${producto.nombre}</h3>
 
         <p class="producto-descripcion">
-          ${producto.descripcion ?? "Sin descripción disponible."}
+          ${crearResumenEspecificaciones(producto)}
         </p>
 
         <div class="producto-footer">
