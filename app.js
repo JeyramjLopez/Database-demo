@@ -93,7 +93,18 @@ async function controlarAccesoAdmin() {
     seccionAdministrar.style.display = "none";
   }
 }
+const modalEspecificaciones =
+  document.querySelector("#modal-especificaciones");
 
+const cerrarEspecificaciones =
+  document.querySelector("#cerrar-especificaciones");
+
+const modalProductoNombre =
+  document.querySelector("#modal-producto-nombre");
+
+const modalListaEspecificaciones =
+  document.querySelector("#modal-lista-especificaciones");
+  let productosActuales = [];
 controlarAccesoAdmin();
 
 clienteSupabase.auth.onAuthStateChange(() => {
@@ -866,6 +877,7 @@ function obtenerEstadoStock(stock) {
 }
 
 function mostrarProductos(lista) {
+  productosActuales = lista;
   listaProductos.innerHTML = "";
 
   if (lista.length === 0) {
@@ -916,7 +928,13 @@ function mostrarProductos(lista) {
         <p class="producto-descripcion">
           ${crearResumenEspecificaciones(producto)}
         </p>
-
+<button
+  class="boton-especificaciones"
+  data-id="${producto.id}"
+  type="button"
+>
+  Ver especificaciones
+</button>
         <div class="producto-footer">
           <strong class="producto-precio">
             ${Number(producto.precio_venta).toLocaleString(
@@ -953,7 +971,89 @@ botonAgregar.addEventListener("click", () => {
   mensaje.textContent =
     `${lista.length} productos encontrados`;
 }
+function abrirEspecificaciones(idProducto) {
+  const producto = productosActuales.find(
+    (producto) => String(producto.id) === String(idProducto)
+  );
 
+  if (!producto) return;
+
+  modalProductoNombre.textContent = producto.nombre;
+  modalListaEspecificaciones.innerHTML = "";
+
+  const especificaciones =
+    producto.especificaciones || {};
+
+  const entradas =
+    Object.entries(especificaciones);
+
+  if (entradas.length === 0) {
+    const mensaje = document.createElement("p");
+    mensaje.textContent =
+      "No hay especificaciones disponibles.";
+
+    modalListaEspecificaciones.appendChild(mensaje);
+  } else {
+    for (const [clave, valor] of entradas) {
+      const fila = document.createElement("div");
+      fila.classList.add("especificacion-fila");
+
+      const nombre = document.createElement("strong");
+      nombre.textContent = clave;
+
+      const dato = document.createElement("span");
+      dato.textContent = valor;
+
+      fila.appendChild(nombre);
+      fila.appendChild(dato);
+
+      modalListaEspecificaciones.appendChild(fila);
+    }
+  }
+
+  modalEspecificaciones.classList.add("activo");
+  modalEspecificaciones.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+}
+
+function cerrarModalEspecificaciones() {
+  modalEspecificaciones.classList.remove("activo");
+  modalEspecificaciones.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+}
+
+listaProductos.addEventListener("click", (evento) => {
+  const boton =
+    evento.target.closest(".boton-especificaciones");
+
+  if (!boton) return;
+
+  abrirEspecificaciones(boton.dataset.id);
+});
+
+cerrarEspecificaciones.addEventListener(
+  "click",
+  cerrarModalEspecificaciones
+);
+
+modalEspecificaciones.addEventListener(
+  "click",
+  (evento) => {
+    if (evento.target === modalEspecificaciones) {
+      cerrarModalEspecificaciones();
+    }
+  }
+);
+
+document.addEventListener("keydown", (evento) => {
+  if (evento.key === "Escape") {
+    cerrarModalEspecificaciones();
+  }
+});
 function aplicarFiltros() {
   const texto = buscador.value
     .toLowerCase()
