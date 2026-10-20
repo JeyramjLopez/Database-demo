@@ -992,3 +992,72 @@ filtroCategoria.addEventListener(
 );
 
 cargarProductos();
+async function finalizarCompra() {
+  if (carrito.length === 0) {
+    alert("El carrito estÃ¡ vacÃ­o.");
+    return;
+  }
+
+  // Agrupar por producto â†’ cantidades
+  // (el carrito guarda un objeto por unidad agregada)
+  const grupos = {};
+  for (const p of carrito) {
+    if (!grupos[p.id]) {
+      grupos[p.id] = {
+        producto_id: p.id,
+        cantidad: 0,
+        precio_unitario: Number(p.precio_venta),
+      };
+    }
+    grupos[p.id].cantidad += 1;
+  }
+  const items = Object.values(grupos);
+
+  const metodoPago = prompt(
+    "MÃ©todo de pago (Tarjeta, ATH MÃ³vil, Efectivo):",
+    "Tarjeta"
+  );
+  if (!metodoPago) return; // cancelÃ³
+
+  const boton = document.querySelector("#finalizar-compra");
+  if (boton) {
+    boton.disabled = true;
+    boton.textContent = "Procesando...";
+  }
+
+  try {
+    // cliente_id: null = compra de invitado.
+    // Si quieres atarlo al usuario logueado, crea el cliente
+    // primero y pasa su id aquÃ­.
+    const { data: ventaId, error } = await clienteSupabase.rpc(
+      "realizar_venta",
+      {
+        p_cliente_id: null,
+        p_metodo_pago: metodoPago.trim(),
+        p_items: items,
+      }
+    );
+
+    if (error) throw error;
+
+    alert("Â¡Compra realizada! Venta #" + ventaId);
+
+    carrito = [];
+    actualizarContadorCarrito();
+    mostrarCarrito();
+    cerrarPanelCarrito();
+    await cargarProductos(); // refresca stock en el catÃ¡logo
+  } catch (e) {
+    console.error("Error en checkout:", e);
+    alert("No se pudo completar la compra: " + e.message);
+  } finally {
+    if (boton) {
+      boton.disabled = false;
+      boton.textContent = "Finalizar compra";
+    }
+  }
+}
+
+document
+  .querySelector("#finalizar-compra")
+  ?.addEventListener("click", finalizarCompra);
